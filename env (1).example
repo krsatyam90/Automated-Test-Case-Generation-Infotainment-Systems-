@@ -1,0 +1,10 @@
+# AgentTest AI — Copy to .env and fill in
+
+OPENAI_API_KEY=sk-your-openai-key-here
+MODEL=gpt-4o
+MAX_TOKENS=4096
+TEMPERATURE=0.1
+
+IVI_URL=http://192.168.1.100:8080
+OUTPUT_DIR=outputs
+LOG_LEVEL=INFO

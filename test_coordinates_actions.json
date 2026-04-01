@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "generated_by": "AgentTest AI v2.0",
+    "session_id": "SESSION_20250331_090000_DEMO",
+    "timestamp": "2025-03-31T09:00:00Z",
+    "ivi_resolution": "1280x720",
+    "touch_unit": "pixels",
+    "screenshot_convention": "{SESSION_ID}/FAIL_{TC_ID}_{STEP}_{TIMESTAMP}.png",
+    "log_convention": "{SESSION_ID}/{TC_ID}_{DATE}.log",
+    "traceability": {
+      "REQ-245963": ["TC_245963_POS", "TC_245963_NEG", "TC_245963_EDGE"],
+      "REQ-245964": ["TC_245964_POS", "TC_245964_NEG"],
+      "REQ-245965": ["TC_245965_PERF"]
+    }
+  },
+  "ui_elements": {
+    "nav_media_btn":     { "x": 120,  "y": 680, "width": 80,  "height": 40, "action": "TAP",          "element_id": "nav-media"        },
+    "nav_bluetooth_btn": { "x": 220,  "y": 680, "width": 80,  "height": 40, "action": "TAP",          "element_id": "nav-bt"           },
+    "nav_navigation_btn":{ "x": 320,  "y": 680, "width": 80,  "height": 40, "action": "TAP",          "element_id": "nav-nav"          },
+    "nav_home_btn":      { "x": 640,  "y": 680, "width": 80,  "height": 40, "action": "TAP",          "element_id": "nav-home"         },
+    "usb_source_btn":    { "x": 200,  "y": 150, "width": 160, "height": 60, "action": "TAP",          "element_id": "source-usb"       },
+    "media_browse_btn":  { "x": 640,  "y": 150, "width": 120, "height": 50, "action": "TAP",          "element_id": "browse-btn"       },
+    "media_play_btn":    { "x": 640,  "y": 500, "width": 80,  "height": 80, "action": "TAP",          "element_id": "play-btn"         },
+    "media_prev_btn":    { "x": 480,  "y": 500, "width": 80,  "height": 80, "action": "TAP",          "element_id": "previous-btn"     },
+    "media_next_btn":    { "x": 800,  "y": 500, "width": 80,  "height": 80, "action": "TAP",          "element_id": "next-btn"         },
+    "track_list":        { "x": 640,  "y": 300, "width": 900, "height": 60, "action": "SCROLL_TAP",   "element_id": "track-list"       },
+    "bt_discovery_toggle":{ "x": 1100,"y": 120, "width": 80,  "height": 40, "action": "TAP",          "element_id": "bt-discovery"     },
+    "bt_device_list":    { "x": 640,  "y": 280, "width": 900, "height": 60, "action": "TAP",          "element_id": "bt-device-item"   },
+    "bt_pin_display":    { "x": 640,  "y": 380, "width": 200, "height": 50, "action": "CAPTURE_TEXT", "element_id": "pairing-pin"      },
+    "bt_confirm_btn":    { "x": 780,  "y": 460, "width": 160, "height": 50, "action": "TAP",          "element_id": "confirm-pairing"  },
+    "bt_cancel_btn":     { "x": 500,  "y": 460, "width": 160, "height": 50, "action": "TAP",          "element_id": "cancel-pairing"   },
+    "error_msg_overlay": { "x": 640,  "y": 360, "width": 600, "height": 80, "action": "VERIFY_TEXT",  "element_id": "error-overlay"    }
+  },
+  "test_sequences": {
+    "TC_245963_POS": {
+      "requirement": "REQ-245963",
+      "description": "Media Playback — Unsupported File Skip After 3s",
+      "steps": [
+        {
+          "step": 1, "action": "TAP", "element": "nav_media_btn",
+          "coordinates": { "x": 120, "y": 680 },
+          "expected_state": "MEDIA_SCREEN_VISIBLE",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245963_POS_step01_nav_media.png"
+        },
+        {
+          "step": 2, "action": "TAP", "element": "usb_source_btn",
+          "coordinates": { "x": 200, "y": 150 },
+          "expected_state": "USB_SOURCE_ACTIVE",
+          "timeout_ms": 3000,
+          "screenshot": "TC_245963_POS_step02_usb_source.png"
+        },
+        {
+          "step": 3, "action": "TAP", "element": "media_browse_btn",
+          "coordinates": { "x": 640, "y": 150 },
+          "expected_state": "BROWSER_OPEN",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245963_POS_step03_browse_open.png"
+        },
+        {
+          "step": 4, "action": "SCROLL_TAP", "element": "track_list",
+          "coordinates": { "x": 640, "y": 300 },
+          "filter": { "extension": ".flac", "supported": false },
+          "expected_state": "UNSUPPORTED_FILE_SELECTED",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245963_POS_step04_file_selected.png"
+        },
+        {
+          "step": 5, "action": "TAP", "element": "media_play_btn",
+          "coordinates": { "x": 640, "y": 500 },
+          "expected_state": "PLAYBACK_STARTED",
+          "timeout_ms": 1000,
+          "screenshot": "TC_245963_POS_step05_play.png"
+        },
+        {
+          "step": 6, "action": "WAIT", "duration_ms": 3000,
+          "expected_state": "SKIP_IN_PROGRESS",
+          "assertion": "elapsed BETWEEN 2500ms AND 3500ms",
+          "screenshot": "TC_245963_POS_step06_skip_verify.png"
+        },
+        {
+          "step": 7, "action": "TAP", "element": "media_prev_btn",
+          "coordinates": { "x": 480, "y": 500 },
+          "expected_state": "PREVIOUS_TRACK_PLAYING",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245963_POS_step07_previous.png"
+        }
+      ],
+      "assertions": [
+        { "id": "A1", "field": "skip_timing",   "operator": "BETWEEN", "min": 2.5,       "max": 3.5,     "unit": "seconds" },
+        { "id": "A2", "field": "system_state",  "operator": "EQUALS",  "expected": "PLAYING" },
+        { "id": "A3", "field": "current_track", "operator": "EQUALS",  "expected": "previous_track" }
+      ],
+      "failure_handling": {
+        "screenshot_on_fail": true,
+        "screenshot_path": "outputs/screenshots/FAIL_TC_245963_POS_{STEP}_{TS}.png",
+        "log_path": "outputs/logs/TC_245963_POS_{DATE}.log"
+      }
+    },
+    "TC_245964_POS": {
+      "requirement": "REQ-245964",
+      "description": "Bluetooth Pairing — PIN Confirmation",
+      "steps": [
+        {
+          "step": 1, "action": "TAP", "element": "nav_bluetooth_btn",
+          "coordinates": { "x": 220, "y": 680 },
+          "expected_state": "BT_SCREEN_VISIBLE",
+          "screenshot": "TC_245964_POS_step01.png"
+        },
+        {
+          "step": 2, "action": "TAP", "element": "bt_discovery_toggle",
+          "coordinates": { "x": 1100, "y": 120 },
+          "expected_state": "DISCOVERY_ACTIVE",
+          "screenshot": "TC_245964_POS_step02.png"
+        },
+        {
+          "step": 3, "action": "WAIT_FOR_ELEMENT", "element": "bt_device_list",
+          "filter": { "device_name": "TestPhone_BT" },
+          "timeout_ms": 15000,
+          "screenshot": "TC_245964_POS_step03.png"
+        },
+        {
+          "step": 4, "action": "TAP", "element": "bt_device_list",
+          "coordinates": { "x": 640, "y": 280 },
+          "expected_state": "PAIRING_PIN_DISPLAYED",
+          "screenshot": "TC_245964_POS_step04.png"
+        },
+        {
+          "step": 5, "action": "CAPTURE_TEXT", "element": "bt_pin_display",
+          "store_as": "displayed_pin",
+          "validation": "regex:^[0-9]{4}$",
+          "screenshot": "TC_245964_POS_step05.png"
+        },
+        {
+          "step": 6, "action": "TAP", "element": "bt_confirm_btn",
+          "coordinates": { "x": 780, "y": 460 },
+          "expected_state": "BT_CONNECTED",
+          "timeout_ms": 5000,
+          "screenshot": "TC_245964_POS_step06.png"
+        }
+      ],
+      "assertions": [
+        { "id": "A1", "field": "pin_format",        "operator": "REGEX",  "pattern": "^[0-9]{4}$" },
+        { "id": "A2", "field": "connection_status",  "operator": "EQUALS", "expected": "CONNECTED" },
+        { "id": "A3", "field": "audio_routing",      "operator": "EQUALS", "expected": "BLUETOOTH_DEVICE" }
+      ]
+    }
+  }
+}

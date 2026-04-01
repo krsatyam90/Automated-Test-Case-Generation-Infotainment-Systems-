@@ -1,0 +1,122 @@
+================================================================================
+AgentTest AI — Structured Execution Log
+================================================================================
+Session ID  : SESSION_20250331_090000_DEMO
+Test Suite  : IVI_Generated_TestSuite
+IVI Build   : IVI_v5.3.2-rc4_20250329
+Environment : HiL_Bench_03 | Ubuntu 22.04 | Python 3.11.4
+Pipeline    : AgentTest AI v2.0
+Generated   : 2025-03-31 09:00:12 UTC
+================================================================================
+
+[SUITE START] IVI_Generated_TestSuite
+[09:00:12.001] INFO  :: Suite setup started
+[09:00:12.445] INFO  :: IVI system connection established: 192.168.1.100:8080
+[09:00:13.102] INFO  :: IVI ready state confirmed (boot: 1.1s)
+[09:00:13.104] INFO  :: Screenshot dir: outputs/screenshots/SESSION_20250331_090000_DEMO/
+
+─────────────────────────────────────────────────────────────────────────────
+[09:00:13.200] TEST  :: TC_245963_POS — Media Playback Unsupported File Skip
+[09:00:13.201] INFO  :: Mounting USB: 5 supported + 3 unsupported
+[09:00:14.103] INFO  :: Navigated: Media → USB → Browse
+[09:00:14.890] INFO  :: File selected: audio_01.flac (unsupported, 245s)
+[09:00:14.891] INFO  :: PLAY pressed — skip timer started
+[09:00:17.945] INFO  :: Skip event at T=3.054s ✓
+[09:00:17.946] ASSERT:: elapsed=3.054s | range=[2.5s–3.5s] → PASS ✓
+[09:00:18.201] INFO  :: PREVIOUS pressed
+[09:00:18.890] ASSERT:: playback_state=PLAYING | track=song_05.ogg → PASS ✓
+[09:00:19.001] PASS  :: TC_245963_POS completed in 5.8s
+[09:00:19.002] INFO  :: Screenshot: TC_245963_POS_PASS_20250331_090019.png
+
+─────────────────────────────────────────────────────────────────────────────
+[09:00:19.100] TEST  :: TC_245963_NEG — Corrupted Unsupported File Handling
+[09:00:19.101] INFO  :: Loading corrupt.flac (0 bytes)
+[09:00:19.450] INFO  :: PLAY pressed
+[09:00:19.812] ERROR :: *** UNEXPECTED BEHAVIOR DETECTED ***
+[09:00:19.813] ERROR :: Expected : UI shows error within 500ms
+[09:00:19.814] ERROR :: Actual   : UI froze for 2317ms before error message appeared
+[09:00:19.815] ERROR :: Freeze   : 2317ms (threshold: 500ms) — EXCEEDED
+[09:00:19.816] CAPTURE:: FAIL_TC_245963_NEG_step3_20250331_090019.png
+[09:00:19.817] TRACE ::
+                         File     : media_player_core.cpp:447
+                         Function : MediaPlayer::loadUnsupportedFormat()
+                         Error    : NullPointerException — codec handle not released
+                         Thread   : media_thread_0x7f3a (blocked 2317ms)
+[09:00:22.134] INFO  :: System reset required after failure
+[09:00:22.890] FAIL  :: TC_245963_NEG FAILED — UI freeze on corrupted FLAC load
+[09:00:22.891] DEFECT:: ID: DEFECT-2025-0331-001
+                         Summary   : Media player UI freezes 2317ms on corrupted FLAC
+                         Severity  : Medium | Priority: High
+                         Component : media_player_core.cpp:447
+                         Repro rate: 3/3 (100%)
+
+─────────────────────────────────────────────────────────────────────────────
+[09:00:23.000] TEST  :: TC_245963_EDGE — Skip At Exactly 3.0s Boundary
+[09:00:23.001] INFO  :: Injecting unsupported signal at T=3.0s
+[09:00:26.082] INFO  :: Skip event at T=3.021s
+[09:00:26.083] ASSERT:: 3.021 >= 3.0 → PASS ✓
+[09:00:26.084] ASSERT:: 3.021 <= 3.2 → PASS ✓
+[09:00:26.300] PASS  :: TC_245963_EDGE completed in 3.3s
+
+─────────────────────────────────────────────────────────────────────────────
+[09:00:26.400] TEST  :: TC_245964_POS — Bluetooth Pairing PIN Confirmation
+[09:00:26.401] INFO  :: Enabling BT discovery
+[09:00:27.890] INFO  :: Device found: TestPhone_BT (AA:BB:CC:DD:EE:FF) at T=1.49s ✓
+[09:00:28.012] INFO  :: Pairing initiated
+[09:00:28.445] INFO  :: PIN displayed: 7392
+[09:00:28.446] ASSERT:: "7392" matches ^[0-9]{4}$ → PASS ✓
+[09:00:29.012] INFO  :: PIN confirmed on remote device
+[09:00:29.890] ASSERT:: connection_status=CONNECTED → PASS ✓
+[09:00:29.891] PASS  :: TC_245964_POS completed in 3.5s
+
+─────────────────────────────────────────────────────────────────────────────
+[09:00:29.900] TEST  :: TC_245964_NEG — Wrong PIN Rejected
+[09:00:30.012] INFO  :: Entering wrong PIN: 0000
+[09:00:31.445] ASSERT:: pairing_failed=TRUE → PASS ✓
+[09:00:31.446] ASSERT:: error_message="Incorrect PIN" → PASS ✓
+[09:00:31.447] PASS  :: TC_245964_NEG completed in 1.5s
+
+─────────────────────────────────────────────────────────────────────────────
+[09:00:31.500] TEST  :: TC_245965_PERF — Audio Routes Within 2 Seconds
+[09:00:31.501] INFO  :: BT device connected: TestPhone_BT
+[09:00:31.502] INFO  :: PLAY_AUDIO pressed — routing timer started
+[09:00:32.987] INFO  :: Audio routed at T=1.485s ✓
+[09:00:32.988] ASSERT:: 1.485 <= 2.0 → PASS ✓
+[09:00:33.100] PASS  :: TC_245965_PERF completed in 1.6s
+
+================================================================================
+SUITE SUMMARY
+================================================================================
+Total Tests :  5
+Passed      :  4  (80.0%)
+Failed      :  1  (20.0%)
+Skipped     :  0
+
+Total Time  : 20.3s
+Avg Per Test:  4.06s
+
+FAILED TESTS:
+  ✗ TC_245963_NEG — UI freeze 2317ms on corrupted FLAC
+    Defect   : DEFECT-2025-0331-001
+    Severity : Medium
+    Component: media_player_core.cpp:447
+    Screenshot: FAIL_TC_245963_NEG_step3_20250331_090019.png
+    Trace    : outputs/logs/traces/TC_245963_NEG_error_trace.json
+
+TRACEABILITY:
+  REQ-245963 → [TC_245963_POS ✓] [TC_245963_NEG ✗] [TC_245963_EDGE ✓]
+  REQ-245964 → [TC_245964_POS ✓] [TC_245964_NEG ✓]
+  REQ-245965 → [TC_245965_PERF ✓]
+
+SCREENSHOTS:
+  outputs/screenshots/SESSION_20250331_090000_DEMO/
+  ├── TC_245963_POS_PASS_20250331_090019.png
+  ├── FAIL_TC_245963_NEG_step3_20250331_090019.png
+  ├── TC_245963_EDGE_PASS_20250331_090026.png
+  ├── TC_245964_POS_PASS_20250331_090029.png
+  ├── TC_245964_NEG_PASS_20250331_090031.png
+  └── TC_245965_PERF_PASS_20250331_090033.png
+
+================================================================================
+END — AgentTest AI Session SESSION_20250331_090000_DEMO
+================================================================================
