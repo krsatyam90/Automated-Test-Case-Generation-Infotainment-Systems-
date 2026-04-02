@@ -1,0 +1,192 @@
+{
+  "metadata": {
+    "generated_by": "AutoTest AI v2.1",
+    "timestamp": "2025-03-31T09:00:00Z",
+    "requirement_source": "IVI_MEDIA_REQ_v2.3.docx",
+    "ivi_resolution": "1280x720",
+    "touch_unit": "pixels",
+    "traceability": {
+      "REQ-245963": ["TC_245963_POS", "TC_245963_NEG", "TC_245963_EDGE"],
+      "REQ-245964": ["TC_245964_POS", "TC_245964_NEG", "TC_245964_PERF"],
+      "REQ-245965": ["TC_245965_POS", "TC_245965_NEG"]
+    }
+  },
+  "ui_elements": {
+    "navigation_bar": {
+      "media_icon":        { "x": 120, "y": 680, "width": 80, "height": 40, "action": "TAP" },
+      "bluetooth_icon":    { "x": 220, "y": 680, "width": 80, "height": 40, "action": "TAP" },
+      "navigation_icon":   { "x": 320, "y": 680, "width": 80, "height": 40, "action": "TAP" },
+      "home_icon":         { "x": 640, "y": 680, "width": 80, "height": 40, "action": "TAP" }
+    },
+    "media_screen": {
+      "source_usb_button": { "x": 200, "y": 150, "width": 160, "height": 60, "action": "TAP" },
+      "browse_button":     { "x": 640, "y": 150, "width": 120, "height": 50, "action": "TAP" },
+      "play_button":       { "x": 640, "y": 500, "width": 80,  "height": 80, "action": "TAP" },
+      "previous_button":   { "x": 480, "y": 500, "width": 80,  "height": 80, "action": "TAP" },
+      "next_button":       { "x": 800, "y": 500, "width": 80,  "height": 80, "action": "TAP" },
+      "track_list_item":   { "x": 640, "y": 300, "width": 900, "height": 60, "action": "TAP", "scroll": true }
+    },
+    "bluetooth_screen": {
+      "discovery_toggle":  { "x": 1100, "y": 120, "width": 80,  "height": 40, "action": "TAP" },
+      "device_list_item":  { "x": 640,  "y": 280, "width": 900, "height": 60, "action": "TAP" },
+      "pin_input_field":   { "x": 640,  "y": 380, "width": 200, "height": 50, "action": "TYPE" },
+      "confirm_button":    { "x": 780,  "y": 460, "width": 160, "height": 50, "action": "TAP" },
+      "cancel_button":     { "x": 500,  "y": 460, "width": 160, "height": 50, "action": "TAP" }
+    }
+  },
+  "test_sequences": {
+    "TC_245963_POS": {
+      "requirement": "REQ-245963",
+      "description": "Media Playback — Unsupported File Skip After 3s",
+      "steps": [
+        {
+          "step": 1,
+          "action": "TAP",
+          "element": "navigation_bar.media_icon",
+          "coordinates": { "x": 120, "y": 680 },
+          "expected_state": "MEDIA_SCREEN_VISIBLE",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245963_POS_step01_nav_tap.png"
+        },
+        {
+          "step": 2,
+          "action": "TAP",
+          "element": "media_screen.source_usb_button",
+          "coordinates": { "x": 200, "y": 150 },
+          "expected_state": "USB_SOURCE_ACTIVE",
+          "timeout_ms": 3000,
+          "screenshot": "TC_245963_POS_step02_usb_source.png"
+        },
+        {
+          "step": 3,
+          "action": "TAP",
+          "element": "media_screen.browse_button",
+          "coordinates": { "x": 640, "y": 150 },
+          "expected_state": "BROWSER_OPEN",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245963_POS_step03_browse_open.png"
+        },
+        {
+          "step": 4,
+          "action": "SCROLL_AND_TAP",
+          "element": "media_screen.track_list_item",
+          "coordinates": { "x": 640, "y": 300 },
+          "filter": { "extension": ".flac", "supported": false },
+          "expected_state": "UNSUPPORTED_FILE_SELECTED",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245963_POS_step04_select_flac.png"
+        },
+        {
+          "step": 5,
+          "action": "TAP",
+          "element": "media_screen.play_button",
+          "coordinates": { "x": 640, "y": 500 },
+          "expected_state": "PLAYBACK_STARTED",
+          "timeout_ms": 1000,
+          "screenshot": "TC_245963_POS_step05_play_pressed.png"
+        },
+        {
+          "step": 6,
+          "action": "WAIT",
+          "duration_ms": 3000,
+          "expected_state": "SKIP_IN_PROGRESS",
+          "assertion": "elapsed >= 2500ms AND elapsed <= 3500ms",
+          "screenshot": "TC_245963_POS_step06_skip_verify.png"
+        },
+        {
+          "step": 7,
+          "action": "TAP",
+          "element": "media_screen.previous_button",
+          "coordinates": { "x": 480, "y": 500 },
+          "expected_state": "PREVIOUS_TRACK_PLAYING",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245963_POS_step07_previous_tap.png"
+        }
+      ],
+      "assertions": [
+        { "id": "A1", "field": "skip_timing", "operator": "BETWEEN", "min": 2.5, "max": 3.5, "unit": "seconds" },
+        { "id": "A2", "field": "system_state", "operator": "EQUALS", "expected": "PLAYING" },
+        { "id": "A3", "field": "current_track", "operator": "EQUALS", "expected": "previous_track" }
+      ],
+      "expected_result": "PASS"
+    },
+    "TC_245964_POS": {
+      "requirement": "REQ-245964",
+      "description": "Bluetooth Pairing — PIN Confirmation",
+      "steps": [
+        {
+          "step": 1,
+          "action": "TAP",
+          "element": "navigation_bar.bluetooth_icon",
+          "coordinates": { "x": 220, "y": 680 },
+          "expected_state": "BT_SCREEN_VISIBLE",
+          "timeout_ms": 2000,
+          "screenshot": "TC_245964_POS_step01_bt_nav.png"
+        },
+        {
+          "step": 2,
+          "action": "TAP",
+          "element": "bluetooth_screen.discovery_toggle",
+          "coordinates": { "x": 1100, "y": 120 },
+          "expected_state": "DISCOVERY_ACTIVE",
+          "timeout_ms": 1000,
+          "screenshot": "TC_245964_POS_step02_discovery_on.png"
+        },
+        {
+          "step": 3,
+          "action": "WAIT_FOR_ELEMENT",
+          "element": "bluetooth_screen.device_list_item",
+          "filter": { "device_name": "TestPhone_BT" },
+          "timeout_ms": 15000,
+          "screenshot": "TC_245964_POS_step03_device_found.png"
+        },
+        {
+          "step": 4,
+          "action": "TAP",
+          "element": "bluetooth_screen.device_list_item",
+          "coordinates": { "x": 640, "y": 280 },
+          "expected_state": "PAIRING_PIN_DISPLAYED",
+          "timeout_ms": 3000,
+          "screenshot": "TC_245964_POS_step04_pin_shown.png"
+        },
+        {
+          "step": 5,
+          "action": "CAPTURE_TEXT",
+          "element": "bluetooth_screen.pin_display",
+          "store_as": "displayed_pin",
+          "validation": "regex:^[0-9]{4}$",
+          "screenshot": "TC_245964_POS_step05_pin_captured.png"
+        },
+        {
+          "step": 6,
+          "action": "TYPE",
+          "element": "bluetooth_screen.pin_input_field",
+          "value": "${displayed_pin}",
+          "coordinates": { "x": 640, "y": 380 },
+          "screenshot": "TC_245964_POS_step06_pin_entered.png"
+        },
+        {
+          "step": 7,
+          "action": "TAP",
+          "element": "bluetooth_screen.confirm_button",
+          "coordinates": { "x": 780, "y": 460 },
+          "expected_state": "BT_CONNECTED",
+          "timeout_ms": 5000,
+          "screenshot": "TC_245964_POS_step07_connected.png"
+        }
+      ],
+      "assertions": [
+        { "id": "A1", "field": "pin_format",       "operator": "REGEX",  "pattern": "^[0-9]{4}$" },
+        { "id": "A2", "field": "connection_status", "operator": "EQUALS", "expected": "CONNECTED" },
+        { "id": "A3", "field": "audio_routing",     "operator": "EQUALS", "expected": "BLUETOOTH_DEVICE" }
+      ],
+      "expected_result": "PASS"
+    }
+  },
+  "failure_handling": {
+    "screenshot_on_fail": true,
+    "screenshot_path_template": "{SCREENSHOT_DIR}/FAIL_{TC_ID}_{STEP}_{TIMESTAMP}.png",
+    "log_path_template":        "{LOG_DIR}/{TC_ID}_{DATE}.log",
+    "error_trace_template":     "{LOG_DIR}/traces/{TC_ID}_error_trace.json"
+  }
+}
